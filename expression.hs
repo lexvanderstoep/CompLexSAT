@@ -1,13 +1,15 @@
 -- Created by Lex van der Stoep on 01/02/2018.
--- Contains the datatypes representing Expressions.
+-- Contains the datatypes representing Formulas.
+-- Also can evaluate formulas and convert them to Conjunctive Normal Form.
+
+module Expression where
 
 data Formula = Var Char
               |And Formula Formula
               |Or Formula Formula
               |Not Formula
               |Impl Formula Formula
-              |T
-              |F
+              |Const Bool
               
 printF :: Formula -> String
 printF (Var c) = [c]
@@ -15,8 +17,8 @@ printF (And a b) = "(" ++ (printF a) ++ " & " ++ (printF b) ++ ")"
 printF (Or a b) = "(" ++ (printF a) ++ " | " ++ (printF b) ++ ")"
 printF (Not a) = "-" ++ (printF a)
 printF (Impl a b) = (printF a) ++ " => " ++ (printF b)
-printF T = "T"
-printF F = "F"
+printF (Const True) = "T"
+printF (Const False) = "F"
 
 
 -- eval evaluates a formula.
@@ -26,12 +28,7 @@ eval (And e1 e2) = (eval e1) && (eval e2)
 eval (Or e1 e2) = (eval e1) || (eval e2)
 eval (Not e) = not(eval e)
 eval (Impl e1 e2) = not(eval e1) || (eval e2)
-eval T = True
-eval F = False
-
-
-
-
+eval (Const b) = b
 
 
 -- toCNF converts a formula to conjunctive normal form (CNF)
@@ -43,6 +40,7 @@ toCNF formula = step3 (step2 (step1 formula))
         step1 (Or a b) = Or (step1 a) (step1 b)
         step1 (And a b) = And (step1 a) (step1 b)
         step1 (Not a) = Not (step1 a)
+        step1 (Const b) = Const b
         
         step2 (Not (Not a)) = step2 a
         step2 (Not (And a b)) = Or (step2 (Not a)) (step2 (Not b))
@@ -51,6 +49,7 @@ toCNF formula = step3 (step2 (step1 formula))
         step2 (Var a) = Var a
         step2 (Or a b) = Or (step2 a) (step2 b)
         step2 (And a b) = And (step2 a) (step2 b)
+        step2 (Const b) = Const b
         
         step2 :: Formula -> Formula
         step3 (Or a (And b c)) = And (step3 (Or a b)) (step3 (Or a c))
@@ -59,3 +58,4 @@ toCNF formula = step3 (step2 (step1 formula))
         step3 (Var a) = Var a
         step3 (And a b) = And (step3 a) (step3 b)
         step3 (Not a) = Not (step3 a)
+        step3 (Const b) = Const b
