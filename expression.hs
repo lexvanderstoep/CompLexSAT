@@ -9,16 +9,16 @@ data Formula = Var String
               |Or Formula Formula
               |Not Formula
               |Impl Formula Formula
-              |Const Bool deriving (Show)
+              |Const Bool
               
-printF :: Formula -> String
-printF (Var c) = c
-printF (And a b) = "(" ++ (printF a) ++ " & " ++ (printF b) ++ ")"
-printF (Or a b) = "(" ++ (printF a) ++ " | " ++ (printF b) ++ ")"
-printF (Not a) = "-" ++ (printF a)
-printF (Impl a b) = (printF a) ++ " -> " ++ (printF b)
-printF (Const True) = "T"
-printF (Const False) = "F"
+instance Show Formula where
+  show (Var c) = c
+  show (And a b) = (show a) ++ " & " ++ (show b)
+  show (Or a b) = "(" ++ (show a) ++ " | " ++ (show b) ++ ")"
+  show (Not a) = "-" ++ (show a)
+  show (Impl a b) = "(" ++ (show a) ++ " -> " ++ (show b) ++ ")"
+  show (Const True) = "T"
+  show (Const False) = "F"
 
 
 -- eval evaluates a formula.
