@@ -4,26 +4,26 @@
 
 module Expression where
 
-data Formula = Var Char
+data Formula = Var String
               |And Formula Formula
               |Or Formula Formula
               |Not Formula
               |Impl Formula Formula
-              |Const Bool
+              |Const Bool deriving (Show)
               
 printF :: Formula -> String
-printF (Var c) = [c]
+printF (Var c) = c
 printF (And a b) = "(" ++ (printF a) ++ " & " ++ (printF b) ++ ")"
 printF (Or a b) = "(" ++ (printF a) ++ " | " ++ (printF b) ++ ")"
 printF (Not a) = "-" ++ (printF a)
-printF (Impl a b) = (printF a) ++ " => " ++ (printF b)
+printF (Impl a b) = (printF a) ++ " -> " ++ (printF b)
 printF (Const True) = "T"
 printF (Const False) = "F"
 
 
 -- eval evaluates a formula.
 eval :: Formula -> Bool
-eval (Var c) = error ("Unbound variable " ++ [c] ++ " found")
+eval (Var c) = error ("Unbound variable " ++ c ++ " found")
 eval (And e1 e2) = (eval e1) && (eval e2)
 eval (Or e1 e2) = (eval e1) || (eval e2)
 eval (Not e) = not(eval e)
@@ -33,7 +33,7 @@ eval (Const b) = b
 
 -- toCNF converts a formula to conjunctive normal form (CNF)
 toCNF :: Formula -> Formula
-toCNF formula = step3 (step2 (step1 formula))
+toCNF formula = step3 $ step3 $ step3 (step2 (step1 formula))
     where
         step1 (Impl a b) = Or (Not (step1 a)) (step1 b)
         step1 (Var a) = Var a

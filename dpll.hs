@@ -4,8 +4,8 @@
 module DPLL where
 import Expression
 
-data Literal = VAR Char
-             | NVAR Char deriving (Show, Eq)
+data Literal = VAR String
+             | NVAR String deriving (Show, Eq)
 
 type Clause = [Literal]
 
@@ -86,12 +86,12 @@ removePureLiterals cs = filter (\ls -> not (containsAny (findPureLiterals cs) ls
 --
 
 -- Case split a variable found in the clauses, setting it to True and False and checking for satisfiability
-findVariable :: [Clause] -> Char
+findVariable :: [Clause] -> String
 findVariable ([]:cs) = findVariable cs
 findVariable (((VAR c):_):_) = c
 findVariable (((NVAR c):_):_) = c
 
-setValue :: [Clause] -> Char -> Bool -> [Clause]
+setValue :: [Clause] -> String -> Bool -> [Clause]
 setValue [] _ _ = []
 setValue (c:cs) var True = if (contains c (VAR var)) then setValue cs var True
                            else if (contains c (NVAR var)) then (remove c (NVAR var)):(setValue cs var True)
@@ -111,3 +111,8 @@ satisfiable [] = True
 satisfiable cs = if (contains cs' []) then False
                  else (satisfiable (caseSplit cs' True)) || (satisfiable (caseSplit cs' False))
                  where cs' = removePureLiterals (unitPropagation (removeTautologies cs))
+                 
+-- Returns the validity of a given formula
+proveTheorem :: Formula -> Bool
+proveTheorem f = not (satisfiable clauses)
+                 where clauses = toList (toCNF (Not f))
