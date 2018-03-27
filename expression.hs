@@ -9,18 +9,20 @@ data Formula = Var String
               |Or Formula Formula
               |Not Formula
               |Impl Formula Formula
+              |BiImpl Formula Formula
               |Const Bool
               
 instance Show Formula where
   show (Var c) = c
-  show (And a b) = (show a) ++ " & " ++ (show b)
-  show (Or a b) = "(" ++ (show a) ++ " | " ++ (show b) ++ ")"
+  show (And a b) = (show a) ++ " ∧ " ++ (show b)
+  show (Or a b) = "(" ++ (show a) ++ " ∨ " ++ (show b) ++ ")"
   show (Not a) = "-" ++ (show a)
-  show (Impl a b) = "(" ++ (show a) ++ " -> " ++ (show b) ++ ")"
+  show (Impl a b) = "(" ++ (show a) ++ " --> " ++ (show b) ++ ")"
+  show (BiImpl a b) = "(" ++ (show a) ++ "<->" ++ (show b) ++ ")"
   show (Const True) = "T"
   show (Const False) = "F"
 
-
+-- EVALUATION
 -- eval evaluates a formula.
 eval :: Formula -> Bool
 eval (Var c) = error ("Unbound variable " ++ c ++ " found")
@@ -28,14 +30,16 @@ eval (And e1 e2) = (eval e1) && (eval e2)
 eval (Or e1 e2) = (eval e1) || (eval e2)
 eval (Not e) = not(eval e)
 eval (Impl e1 e2) = not(eval e1) || (eval e2)
+eval (BiImpl e1 e2) = (eval e1)==(eval e2)
 eval (Const b) = b
 
-
+-- CNF CONVERSION
 -- toCNF converts a formula to conjunctive normal form (CNF)
 toCNF :: Formula -> Formula
 toCNF formula = step3 $ step3 $ step3 (step2 (step1 formula))
     where
         step1 (Impl a b) = Or (Not (step1 a)) (step1 b)
+        step1 (BiImpl a b) = Or (And (step1 a) (step1 b)) (And (Not (step1 a)) (Not (step1 b)))
         step1 (Var a) = Var a
         step1 (Or a b) = Or (step1 a) (step1 b)
         step1 (And a b) = And (step1 a) (step1 b)
