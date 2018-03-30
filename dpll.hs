@@ -141,3 +141,6 @@ validFormula f =
         sat = satisfiable clauses Map.empty
     in
         if (Maybe.isNothing sat) then Valid else Interpretation (Maybe.fromJust sat)
+
+validFormulaS :: String -> ValidResult
+validFormulaS s = validFormula $ parse s
