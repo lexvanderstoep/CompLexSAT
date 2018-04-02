@@ -1,10 +1,11 @@
 -- Created by Lex van der Stoep on 12/02/2018.
 -- Contains functions to run the DPLL method.
 -- The function satisfiable runs the entire DPLL method on a set of clauses.
-module DPLL where
+module Main where
 import Expression
 import qualified Data.Map as Map
 import qualified Data.Maybe as Maybe
+import System.Environment
 
 data Literal = VAR String
              | NVAR String deriving (Show, Eq)
@@ -12,7 +13,7 @@ data Literal = VAR String
 type Clause = [Literal]
 type Mapping = Map.Map String Bool
 data ValidResult = Valid 
-                  |Interpretation Mapping
+                  |Interpretation Mapping deriving Eq
 instance Show ValidResult where
     show Valid = "The formula is valid!"
     show (Interpretation m) = "Falsifying interpretation : " ++ (show (Map.toList m))
@@ -144,3 +145,10 @@ validFormula f =
 
 validFormulaS :: String -> ValidResult
 validFormulaS s = validFormula $ parse s
+
+main = do
+    args <- getArgs
+    case args of
+      [formulaS] -> do
+        putStrLn (show (validFormulaS formulaS))
+      _ -> putStrLn "Wrong number of arguments"
