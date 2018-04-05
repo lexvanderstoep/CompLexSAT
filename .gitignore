@@ -21,3 +21,77 @@ cabal.project.local~
 .HTF/
 .ghc.environment.*
 
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# User-specific stuff:
+Java/.idea/**/workspace.xml
+Java/.idea/**/tasks.xml
+Java/.idea/dictionaries
+
+# Sensitive or high-churn files:
+Java/.idea/**/dataSources/
+Java/.idea/**/dataSources.ids
+Java/.idea/**/dataSources.xml
+Java/.idea/**/dataSources.local.xml
+Java/.idea/**/sqlDataSources.xml
+Java/.idea/**/dynamic.xml
+Java/.idea/**/uiDesigner.xml
+
+# Gradle:
+Java/.idea/**/gradle.xml
+Java/.idea/**/libraries
+
+## File-based project format:
+Java/*.iws
+
+## Plugin-specific files:
+
+# IntelliJ
+Java/out/
+
+# mpeltonen/sbt-idea plugin
+Java/.idea_modules/
+
+# JIRA plugin
+Java/atlassian-ide-plugin.xml
+
+# Cursive Clojure plugin
+Java/.idea/replstate.xml
+
+# Ruby plugin and RubyMine
+Java/.rakeTasks
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
+Java/*.iml
+Java/modules.xml
+Java/.idea/misc.xml
+Java/*.ipr
+
+# Sonarlint plugin
+Java/.idea/sonarlint
